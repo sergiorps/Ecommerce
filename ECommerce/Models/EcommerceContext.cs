@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace ECommerce.Models
 {
@@ -7,6 +8,12 @@ namespace ECommerce.Models
         public EcommerceContext() : base("DefaultConnection")
         {
 
+        }
+
+        //Desabilita exclusão em cascata
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
         }
 
         public System.Data.Entity.DbSet<ECommerce.Models.Departaments> Departaments { get; set; }

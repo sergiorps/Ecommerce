@@ -4,9 +4,12 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+<h2>Excluir Departamento</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Deseja realmente exluir?</h3>
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger"})
+
 <div>
     <h4>Departaments</h4>
     <hr />

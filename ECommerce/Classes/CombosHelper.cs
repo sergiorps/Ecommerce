@@ -19,7 +19,7 @@ namespace ECommerce.Classes
                 Name = "[ Selecione um Departamento ]"
             });
 
-            dep = dep.OrderBy(d => d.Name).ToList();
+            return dep = dep.OrderBy(d => d.Name).ToList();
         }
 
     public void Dispose()

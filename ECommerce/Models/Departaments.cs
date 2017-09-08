@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Models
 {
@@ -14,6 +12,7 @@ namespace ECommerce.Models
 
         [Display(Name = "Departamento")]
         [Required(ErrorMessage ="O campo Nome é requerido!")]
+        [Index("Departament_Name_Index", IsUnique = true)]
         public string Name { get; set; }
 
         public virtual ICollection<City> Cities { get; set; }

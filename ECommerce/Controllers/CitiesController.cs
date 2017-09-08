@@ -1,4 +1,5 @@
-﻿using ECommerce.Models;
+﻿using ECommerce.Classes;
+using ECommerce.Models;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -35,15 +36,9 @@ namespace ECommerce.Controllers
         // GET: Cities/Create
         public ActionResult Create()
         {
-            var dep = db.Departaments.ToList();
-            dep.Add(new Departaments{
-                DepartamentsId = 0,
-                Name = "[ Selecione um Departamento ]"
-            });
 
-            dep = dep.OrderBy(d => d.Name).ToList();
 
-            ViewBag.DepartamentsId = new SelectList(dep, "DepartamentsId", "Name");
+            ViewBag.DepartamentsId = new SelectList(CombosHelper.GetDepartaments(), "DepartamentsId", "Name");
             return View();
         }
 
@@ -61,16 +56,7 @@ namespace ECommerce.Controllers
                 return RedirectToAction("Index");
             }
 
-            var dep = db.Departaments.ToList();
-            dep.Add(new Departaments
-            {
-                DepartamentsId = 0,
-                Name = "[ Selecione um Departamento ]"
-            });
-
-            dep = dep.OrderBy(d => d.Name).ToList();
-
-            ViewBag.DepartamentsId = new SelectList(dep, "DepartamentsId", "Name");
+            ViewBag.DepartamentsId = new SelectList(CombosHelper.GetDepartaments(), "DepartamentsId", "Name");
             return View(city);
         }
 
@@ -86,7 +72,7 @@ namespace ECommerce.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.DepartamentsId = new SelectList(db.Departaments, "DepartamentsId", "Name", city.DepartamentsId);
+            ViewBag.DepartamentsId = new SelectList(CombosHelper.GetDepartaments(), "DepartamentsId", "Name", city.DepartamentsId);
             return View(city);
         }
 
@@ -103,7 +89,7 @@ namespace ECommerce.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.DepartamentsId = new SelectList(db.Departaments, "DepartamentsId", "Name", city.DepartamentsId);
+            ViewBag.DepartamentsId = new SelectList(CombosHelper.GetDepartaments(), "DepartamentsId", "Name", city.DepartamentsId);
             return View(city);
         }
 

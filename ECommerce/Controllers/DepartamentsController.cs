@@ -107,8 +107,26 @@ namespace ECommerce.Controllers
         {
             Departaments departaments = db.Departaments.Find(id);
             db.Departaments.Remove(departaments);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (System.Exception ex)
+            {   //Abaixo estou verificando se tenho uma informação nula na aplicação e no banco de dados e depois
+                //se realmente estou tratando a questão do delete em cascata.
+                if(ex.InnerException != null && 
+                        ex.InnerException.InnerException != null &&
+                                ex.InnerException.InnerException.Message.Contains("REFERENCE")){
+                    ModelState.AddModelError(string.Empty, "Não é possivel remover o Departamento porque existem cidades relacionadas a eles. Primeiro remova as cidades e volte a excluir!");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+                return View(departaments);
+
+            }
         }
 
         protected override void Dispose(bool disposing)
