@@ -47,8 +47,25 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Departaments.Add(departaments);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (System.Exception ex)
+                {   //Abaixo estou verificando se já existe o Departamento em questão!
+                    if (ex.InnerException != null &&
+                            ex.InnerException.InnerException != null &&
+                                    ex.InnerException.InnerException.Message.Contains("_Index"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Esse Departamento já existe!");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+                    return View(departaments);
+                }
             }
 
             return View(departaments);
