@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ECommerce.Classes;
+using ECommerce.Models;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using ECommerce.Models;
-using ECommerce.Classes;
 
 namespace ECommerce.Controllers
 {
@@ -58,11 +55,30 @@ namespace ECommerce.Controllers
         // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CompanyId,Name,Phone,Address,Logo,DepartamentsId,Cityid")] Company company)
+        public ActionResult Create(Company company)
         {
             if (ModelState.IsValid)
             {
+                var pic = string.Empty;
+                var folder = "~/Content/Logos";
+                var file = string.Format("{0}.jpg", company.CompanyId);
+
                 db.Companies.Add(company);
+                db.SaveChanges();
+
+
+                if (company.LogoFile != null)
+                {
+                    var response = FilesHelper.UploadPhoto(company.LogoFile, folder, file);
+
+                    if (response == true)
+                    {
+                        pic = string.Format("{0}/{1}.jpg", folder, file);
+                        company.Logo = pic;
+                    }
+                }
+
+                db.Entry(company).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -94,10 +110,27 @@ namespace ECommerce.Controllers
         // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CompanyId,Name,Phone,Address,Logo,DepartamentsId,Cityid")] Company company)
+        public ActionResult Edit(Company company)
         {
             if (ModelState.IsValid)
             {
+                var pic = string.Empty;
+                var folder = "~/Content/Logos";
+                var file = string.Format("{0}.jpg", company.CompanyId);
+
+                if (company.LogoFile != null)
+                {
+                    var response = FilesHelper.UploadPhoto(company.LogoFile, folder, file);
+
+                    if (response == true)
+                    {
+                        pic = string.Format("{0}/{1}.jpg", folder, file);
+                        company.Logo = pic;
+                        db.Entry(company).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
+
                 db.Entry(company).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
