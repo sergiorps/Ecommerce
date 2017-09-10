@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Web;
 
 namespace ECommerce.Classes
@@ -15,6 +16,7 @@ namespace ECommerce.Classes
                 return false;
             }
 
+
             try
             {
                 if (file != null)
@@ -27,15 +29,19 @@ namespace ECommerce.Classes
                         file.InputStream.CopyTo(ms);
                         byte[] array = ms.GetBuffer();
                     }
+
                 }
+
                 return true;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
 
                 return false;
             }
-            
+
+
+
         }
     }
 }
